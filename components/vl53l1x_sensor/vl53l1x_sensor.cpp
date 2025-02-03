@@ -198,35 +198,26 @@ void VL53L1XSensor::loop() {
 void VL53L1XSensor::update() {
     if (checkForDataReady()) {
         int16_t distance_mm = distance();
+        if (this->ambient_rate_sensor != nullptr) {
+          int16_t ambient_rate_mcps = ambientRate();
+          this->ambient_rate_sensor->publish_state(ambient_rate_mcps);
+        }
+        if (this->avg_signal_rate_sensor != nullptr) {
+          int16_t avg_signal_rate_mcps = avgSignalRate();
+          this->avg_signal_rate_sensor->publish_state(avg_signal_rate_mcps);
+        }
+        if (this->peak_signal_rate_sensor != nullptr) {
+          int16_t peak_signal_rate_mcps = peakSignalRate();
+          this->peak_signal_rate_sensor->publish_state(peak_signal_rate_mcps);
+        }
         if (distance_mm == -1) {
           // something went wrong!
           ESP_LOGD(TAG, "'%s' - Couldn't get distance: 0x%02X", this->name_.c_str(), rangeStatus);
           this->publish_state(NAN);
-          if (this->ambient_rate_sensor != nullptr) {
-            this->ambient_rate_sensor->publish_state(NAN);
-          }
-          if (this->avg_signal_rate_sensor != nullptr) {
-            this->avg_signal_rate_sensor->publish_state(NAN);
-          }
-          if (this->peak_signal_rate_sensor != nullptr) {
-            this->peak_signal_rate_sensor->publish_state(NAN);
-          }
         } else {
           float distance_m = (float)distance_mm / 1000.0;
           ESP_LOGD(TAG, "'%s' - Got distance %i mm", this->name_.c_str(), distance_mm);
           this->publish_state(distance_m);
-          if (this->ambient_rate_sensor != nullptr) {
-            int16_t ambient_rate_mcps = ambientRate();
-            this->ambient_rate_sensor->publish_state(ambient_rate_mcps);
-          }
-          if (this->avg_signal_rate_sensor != nullptr) {
-            int16_t avg_signal_rate_mcps = avgSignalRate();
-            this->avg_signal_rate_sensor->publish_state(avg_signal_rate_mcps);
-          }
-          if (this->peak_signal_rate_sensor != nullptr) {
-            int16_t peak_signal_rate_mcps = peakSignalRate();
-            this->peak_signal_rate_sensor->publish_state(peak_signal_rate_mcps);
-          }
         }
     } else {
         ESP_LOGD(TAG, "'%s' - data not ready", this->name_.c_str());
@@ -310,28 +301,16 @@ int16_t VL53L1XSensor::distance() {
 }
 
 int16_t VL53L1XSensor::ambientRate() {
-    rangeStatus = getRangeStatus();
-    if (rangeStatus != 0x0) {
-        return -1;
-    }
     uint16_t ambientRate = readWord(0x0090);
     return (int16_t)ambientRate;
 }
 
 int16_t VL53L1XSensor::avgSignalRate() {
-    rangeStatus = getRangeStatus();
-    if (rangeStatus != 0x0) {
-        return -1;
-    }
     uint16_t avgSignalRate = readWord(0x009E);
     return (int16_t)avgSignalRate;
 }
 
 int16_t VL53L1XSensor::peakSignalRate() {
-    rangeStatus = getRangeStatus();
-    if (rangeStatus != 0x0) {
-        return -1;
-    }
     uint16_t peakSignalRate = readWord(0x0098);
     return (int16_t)peakSignalRate;
 }
