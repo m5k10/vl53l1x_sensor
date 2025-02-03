@@ -56,3 +56,8 @@ MCPS (Mega Counts Per Second) measures the number of detected photon events per 
 Sensors reported to Home Assistant:
 
 ![Screenshot of sensors reported to Home Assistant](imgs/vl53l1x_sensors.png?raw=true "Home Assistant screenshot")
+
+
+ST documentation:
+- https://www.st.com/resource/en/user_manual/um2356-vl53l1x-api-user-manual-stmicroelectronics.pdf
+- https://www.st.com/resource/en/user_manual/um2555-vl53l1x-ultra-lite-driver-multiple-zone-implementation-stmicroelectronics.pdf
