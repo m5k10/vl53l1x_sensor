@@ -22,6 +22,10 @@ VL53L1XSensor = vl53l1x_ns.class_(
 CONF_TIMING_BUDGET = "timing_budget"
 CONF_DISTANCE_MODE = "distance_mode"
 CONF_SIGNAL_THRESHOLD = "signal_threshold"
+CONF_ROI_CENTER = "roi_center"
+CONF_ROI_SIZE = "roi_size"
+CONF_X = "x"
+CONF_Y = "y"
 CONF_AMBIENT_RATE_SENSOR = "ambient_rate_sensor"
 CONF_AVG_SIGNAL_RATE_SENSOR = "avg_signal_rate_sensor"
 CONF_PEAK_SIGNAL_RATE_SENSOR = "peak_signal_rate_sensor"
@@ -57,6 +61,10 @@ def check_timeout(value):
 
 DistanceMode = vl53l1x_ns.enum("DistanceMode")
 
+CONFIG_XY = cv.All({
+    cv.Required(CONF_X): cv.int_range(4, 16),
+    cv.Required(CONF_Y): cv.int_range(4, 16),
+})
 
 CONFIG_SCHEMA = cv.All(
     sensor.sensor_schema(
@@ -86,6 +94,8 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_ROI_CENTER, default=199): cv.int_range(0, 255),
+            cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_XY,
         }
     )
     .extend(cv.polling_component_schema("60s"))
@@ -118,5 +128,10 @@ async def to_code(config):
     if peak_signal_rate_sensor_config := config.get(CONF_PEAK_SIGNAL_RATE_SENSOR):
         sens = await sensor.new_sensor(peak_signal_rate_sensor_config)
         cg.add(var.set_peak_signal_rate_sensor(sens))
+    if CONF_ROI_CENTER in config:
+        cg.add(var.set_roi_center(config[CONF_ROI_CENTER]))
+    if CONF_ROI_SIZE in config:
+        roi_size = config[CONF_ROI_SIZE]
+        cg.add(var.set_roi_size(roi_size[CONF_X], roi_size[CONF_Y]))
 
     await i2c.register_i2c_device(var, config)

@@ -182,6 +182,7 @@ void VL53L1XSensor::setup() {
     set_distance_mode();
     set_measurement_timing_budget();
     set_signal_threshold();
+    set_roi();
 
     // Set the sensor to the desired final address
     reg16(0x0001) = final_address & 0x7F;
@@ -238,6 +239,8 @@ void VL53L1XSensor::dump_config() {
     ESP_LOGCONFIG(TAG, "  Distance mode: %u", this->distance_mode_);
     ESP_LOGCONFIG(TAG, "  Timing budget: %uµs", this->timing_budget_us_);
     ESP_LOGCONFIG(TAG, "  Signal threshold: %u", this->signal_threshold_);
+    ESP_LOGCONFIG(TAG, "  ROI center SPAD: %u", this->roi_center_);
+    ESP_LOGCONFIG(TAG, "  ROI size: x=%u, y=%u", this->roi_size_x_, this->roi_size_y_);
 }
 
 void VL53L1XSensor::startRanging() {
@@ -506,8 +509,15 @@ uint16_t VL53L1XSensor::encode_timeout(uint32_t timeout_mclks)
 }
 
 void VL53L1XSensor::set_signal_threshold() {
-    writeWord(0x0066,signal_threshold_>>3); // div by 1024 to convert KCPS to MCPS
+    writeWord(0x0066, signal_threshold_>>3); // div by 1024 to convert KCPS to MCPS
 }
+
+void VL53L1XSensor::set_roi() {
+    reg16(0x007F) = this->roi_center_;
+    uint8_t roi_size = (this->roi_size_y_ - 1) << 4 | (this->roi_size_x_ - 1);
+    reg16(0x0080) = roi_size;
+}
+
 
 } //namespace vl53l1x
 } //namespace esphome

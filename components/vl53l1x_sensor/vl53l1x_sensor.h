@@ -26,6 +26,8 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_distance_mode(DistanceMode dm) { this->distance_mode_ = dm; };
     void set_timing_budget(uint32_t us) { this->timing_budget_us_ = us; };
     void set_signal_threshold(uint16_t signal) { this->signal_threshold_ = signal; };
+    void set_roi_center(uint8_t roi_center) { this->roi_center_ = roi_center; };
+    void set_roi_size(uint8_t x, uint8_t y) { this->roi_size_x_ = x; this->roi_size_y_ = y; };
 
     void set_ambient_rate_sensor(sensor::Sensor *ambient_rate_sensor) { this->ambient_rate_sensor = ambient_rate_sensor; }
     void set_avg_signal_rate_sensor(sensor::Sensor *avg_signal_rate_sensor) { this->avg_signal_rate_sensor = avg_signal_rate_sensor; }
@@ -53,6 +55,7 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_distance_mode();
     void set_measurement_timing_budget();
     void set_signal_threshold();
+    void set_roi();
 
     sensor::Sensor *ambient_rate_sensor{nullptr};
     sensor::Sensor *avg_signal_rate_sensor{nullptr};
@@ -67,6 +70,9 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     DistanceMode distance_mode_{Long};
     uint16_t timing_budget_us_{};
     uint16_t signal_threshold_{};
+    uint8_t roi_center_{};
+    uint8_t roi_size_x_{};
+    uint8_t roi_size_y_{};
     uint8_t rangeStatus{};
 };
 

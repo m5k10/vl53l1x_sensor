@@ -32,6 +32,10 @@ sensor:
       name: "avg_signal_rate"
     peak_signal_rate_sensor:
       name: "peak_signal_rate"
+    roi_center: 199
+    roi_size:
+      x: 4
+      y: 4
 i2c:
   sda: 4
   scl: 5
