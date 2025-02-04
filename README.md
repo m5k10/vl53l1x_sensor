@@ -50,6 +50,9 @@ sensor:
     peak_signal_rate_sensor: # creates sensor to report peak signal
       id: "peak_signal_rate"
       name: "Peak Signal Rate [MCPS]"
+    range_status_sensor:
+      id: "range_status"
+      name: "Range Status"
 ```
 MCPS (Mega Counts Per Second) measures the number of detected photon events per second.
 

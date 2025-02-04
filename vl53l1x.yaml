@@ -32,6 +32,8 @@ sensor:
       name: "avg_signal_rate"
     peak_signal_rate_sensor:
       name: "peak_signal_rate"
+    range_status_sensor:
+      name: "range_status"
     roi_center: 199
     roi_size:
       x: 4

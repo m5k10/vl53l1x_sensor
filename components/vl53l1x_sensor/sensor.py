@@ -29,6 +29,7 @@ CONF_Y = "y"
 CONF_AMBIENT_RATE_SENSOR = "ambient_rate_sensor"
 CONF_AVG_SIGNAL_RATE_SENSOR = "avg_signal_rate_sensor"
 CONF_PEAK_SIGNAL_RATE_SENSOR = "peak_signal_rate_sensor"
+CONF_RANGE_STATUS_SENSOR = "range_status_sensor"
 CONF_VALID_TIMING_BUDGET_DM_SHORT = [15, 20, 33, 50, 100, 200, 500]
 CONF_VALID_TIMING_BUDGET_DM_MEDIUM_AND_LONG = [20, 33, 50, 100, 200, 500]
 
@@ -94,6 +95,10 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_RANGE_STATUS_SENSOR): sensor.sensor_schema(
+                accuracy_decimals=0,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
             cv.Optional(CONF_ROI_CENTER, default=199): cv.int_range(0, 255),
             cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_XY,
         }
@@ -128,6 +133,9 @@ async def to_code(config):
     if peak_signal_rate_sensor_config := config.get(CONF_PEAK_SIGNAL_RATE_SENSOR):
         sens = await sensor.new_sensor(peak_signal_rate_sensor_config)
         cg.add(var.set_peak_signal_rate_sensor(sens))
+    if range_status_sensor_config := config.get(CONF_RANGE_STATUS_SENSOR):
+        sens = await sensor.new_sensor(range_status_sensor_config)
+        cg.add(var.set_range_status_sensor(sens))
     if CONF_ROI_CENTER in config:
         cg.add(var.set_roi_center(config[CONF_ROI_CENTER]))
     if CONF_ROI_SIZE in config:

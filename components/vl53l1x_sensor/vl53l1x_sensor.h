@@ -29,9 +29,10 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_roi_center(uint8_t roi_center) { this->roi_center_ = roi_center; };
     void set_roi_size(uint8_t x, uint8_t y) { this->roi_size_x_ = x; this->roi_size_y_ = y; };
 
-    void set_ambient_rate_sensor(sensor::Sensor *ambient_rate_sensor) { this->ambient_rate_sensor = ambient_rate_sensor; }
-    void set_avg_signal_rate_sensor(sensor::Sensor *avg_signal_rate_sensor) { this->avg_signal_rate_sensor = avg_signal_rate_sensor; }
-    void set_peak_signal_rate_sensor(sensor::Sensor *peak_signal_rate_sensor) { this->peak_signal_rate_sensor = peak_signal_rate_sensor; }
+    void set_ambient_rate_sensor(sensor::Sensor *sensor) { this->ambient_rate_sensor = sensor; }
+    void set_avg_signal_rate_sensor(sensor::Sensor *sensor) { this->avg_signal_rate_sensor = sensor; }
+    void set_peak_signal_rate_sensor(sensor::Sensor *sensor) { this->peak_signal_rate_sensor = sensor; }
+    void set_range_status_sensor(sensor::Sensor *sensor) { this->range_status_sensor = sensor; }
 
     private:
     void setI2CAddress(uint8_t addr);
@@ -57,6 +58,7 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_signal_threshold();
     void set_roi();
 
+    sensor::Sensor *range_status_sensor{nullptr};
     sensor::Sensor *ambient_rate_sensor{nullptr};
     sensor::Sensor *avg_signal_rate_sensor{nullptr};
     sensor::Sensor *peak_signal_rate_sensor{nullptr};

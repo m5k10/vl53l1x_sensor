@@ -197,32 +197,36 @@ void VL53L1XSensor::loop() {
 }
 
 void VL53L1XSensor::update() {
-    if (checkForDataReady()) {
-        int16_t distance_mm = distance();
-        if (this->ambient_rate_sensor != nullptr) {
-          int16_t ambient_rate_mcps = ambientRate();
-          this->ambient_rate_sensor->publish_state(ambient_rate_mcps);
-        }
-        if (this->avg_signal_rate_sensor != nullptr) {
-          int16_t avg_signal_rate_mcps = avgSignalRate();
-          this->avg_signal_rate_sensor->publish_state(avg_signal_rate_mcps);
-        }
-        if (this->peak_signal_rate_sensor != nullptr) {
-          int16_t peak_signal_rate_mcps = peakSignalRate();
-          this->peak_signal_rate_sensor->publish_state(peak_signal_rate_mcps);
-        }
-        if (distance_mm == -1) {
-          // something went wrong!
-          ESP_LOGD(TAG, "'%s' - Couldn't get distance: 0x%02X", this->name_.c_str(), rangeStatus);
-          this->publish_state(NAN);
-        } else {
-          float distance_m = (float)distance_mm / 1000.0;
-          ESP_LOGD(TAG, "'%s' - Got distance %i mm", this->name_.c_str(), distance_mm);
-          this->publish_state(distance_m);
-        }
-    } else {
-        ESP_LOGD(TAG, "'%s' - data not ready", this->name_.c_str());
+  if (checkForDataReady()) {
+    if (this->ambient_rate_sensor != nullptr) {
+      int16_t ambient_rate_mcps = ambientRate();
+      this->ambient_rate_sensor->publish_state(ambient_rate_mcps);
     }
+    if (this->avg_signal_rate_sensor != nullptr) {
+      int16_t avg_signal_rate_mcps = avgSignalRate();
+      this->avg_signal_rate_sensor->publish_state(avg_signal_rate_mcps);
+    }
+    if (this->peak_signal_rate_sensor != nullptr) {
+      int16_t peak_signal_rate_mcps = peakSignalRate();
+      this->peak_signal_rate_sensor->publish_state(peak_signal_rate_mcps);
+    }
+    int8_t rangeStatus = getRangeStatus();
+    if (this->range_status_sensor != nullptr) {
+        this->range_status_sensor->publish_state(rangeStatus);
+    }
+    if (rangeStatus != 0x0) {
+      // something went wrong!
+      ESP_LOGD(TAG, "'%s' - Couldn't get distance: 0x%02X", this->name_.c_str(), rangeStatus);
+      this->publish_state(NAN);
+    } else {
+      int16_t distance_mm = distance();
+      float distance_m = (float)distance_mm / 1000.0;
+      ESP_LOGD(TAG, "'%s' - Got distance %i mm", this->name_.c_str(), distance_mm);
+      this->publish_state(distance_m);
+    }
+  } else {
+    ESP_LOGD(TAG, "'%s' - data not ready", this->name_.c_str());
+  }
 }
 
 void VL53L1XSensor::dump_config() {
@@ -295,10 +299,6 @@ void VL53L1XSensor::setI2CAddress(uint8_t addr) {
 }
 
 int16_t VL53L1XSensor::distance() {
-    rangeStatus = getRangeStatus();
-    if (rangeStatus != 0x0) {
-        return -1;
-    }
     uint16_t distance = readWord(0x0096);
     return (int16_t)distance;
 }
