@@ -1,3 +1,4 @@
+## Configuration
 You can integrate this component into your ESPHome project by adding the following lines to your YAML file:
 
 ```yaml
@@ -60,30 +61,34 @@ sensor:
 
 MCPS (Mega Counts Per Second) measures the number of detected photon events per second.
 
-Range status values:
+Values reported by range status sensor:
 
-| Value | Description                                                             |
-|-------|-------------------------------------------------------------------------|
-| 0     | Ranging measurement is valid                                            |
-| 1     | Raised if sigma estimator check is above the internal defined threshold |
-| 2     | Raised if signal value is below the internal defined threshold          |
-| 3     | Target is below minimum detection threshold.                            |
-| 4     | Raised when phase is out of bounds                                      |
-| 5     | Raised in case of HW or VCSEL failure                                   |
-| 6     | The Range is valid but the wraparound check has not been done.          |
-| 7     | Wrapped target, not matching phases                                     |
-| 8     | Internal algorithm underflow or overflow                                |
-| 9     | Specific to lite ranging.                                               |
-| 10    | 1st interrupt when starting ranging in back to back mode. Ignore data.  |
-| 11    | All Range ok but object is result of multiple pulses merging together.  |
-| 12    | Used  by RQL  as different to phase fail.                               |
-| 13    | User ROI input is not valid e.g. beyond SPAD Array.                     |
-| 14    | The reported range is invalid                                           |
-| 255   | No update                                                               |
+| Value | Description                                                              |
+|-------|--------------------------------------------------------------------------|
+| 0     | Ranging measurement is valid.                   .                        |
+| 1     | Raised if sigma estimator check is above the internal defined threshold. |
+| 2     | Raised if signal value is below the internal defined threshold.          |
+| 3     | Target is below minimum detection threshold.                             |
+| 4     | Raised when phase is out of bounds.                                      |
+| 5     | Raised in case of HW or VCSEL failure.                                   |
+| 6     | The Range is valid but the wraparound check has not been done.           |
+| 7     | Wrapped target, not matching phases.                                     |
+| 8     | Internal algorithm underflow or overflow.                                |
+| 9     | Specific to lite ranging.                                                |
+| 10    | 1st interrupt when starting ranging in back to back mode. Ignore data.   |
+| 11    | All Range ok but object is result of multiple pulses merging together.   |
+| 12    | Used  by RQL  as different to phase fail.                                |
+| 13    | User ROI input is not valid e.g. beyond SPAD Array.                      |
+| 14    | The reported range is invalid.                                           |
+| 255   | No update.                                                               |
+
+## Home Assistant
 
 Sensors reported to Home Assistant:
 
 ![Screenshot of sensors reported to Home Assistant](imgs/vl53l1x_sensors.png?raw=true "Home Assistant screenshot")
+
+## External resources
 
 ST documentation:
 
