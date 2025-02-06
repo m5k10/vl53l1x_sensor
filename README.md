@@ -1,4 +1,5 @@
 You can integrate this component into your ESPHome project by adding the following lines to your YAML file:
+
 ```yaml
 external_components:
   - source: github://soldierkam/vl53l1x_sensor
@@ -6,6 +7,7 @@ external_components:
 ```
 
 Basic configuration:
+
 ```yaml
 sensor:
   - platform: vl53l1x_sensor
@@ -14,6 +16,7 @@ sensor:
 ```
 
 Advanced configuration:
+
 ```yaml
 i2c:
   - id: bus_a
@@ -21,7 +24,7 @@ i2c:
     scl: GPIO9
     # Higher data rates reduce the time required for read/write operations, which
     # should prevent the "component took a long time for an operation" warning in the logs.
-    frequency: 400kHz 
+    frequency: 400kHz
 
 sensor:
   - platform: vl53l1x_sensor
@@ -54,13 +57,35 @@ sensor:
       id: "range_status"
       name: "Range Status"
 ```
+
 MCPS (Mega Counts Per Second) measures the number of detected photon events per second.
+
+Range status values:
+
+| Value | Description                                                             |
+|-------|-------------------------------------------------------------------------|
+| 0     | Ranging measurement is valid                                            |
+| 1     | Raised if sigma estimator check is above the internal defined threshold |
+| 2     | Raised if signal value is below the internal defined threshold          |
+| 3     | Target is below minimum detection threshold.                            |
+| 4     | Raised when phase is out of bounds                                      |
+| 5     | Raised in case of HW or VCSEL failure                                   |
+| 6     | The Range is valid but the wraparound check has not been done.          |
+| 7     | Wrapped target, not matching phases                                     |
+| 8     | Internal algorithm underflow or overflow                                |
+| 9     | Specific to lite ranging.                                               |
+| 10    | 1st interrupt when starting ranging in back to back mode. Ignore data.  |
+| 11    | All Range ok but object is result of multiple pulses merging together.  |
+| 12    | Used  by RQL  as different to phase fail.                               |
+| 13    | User ROI input is not valid e.g. beyond SPAD Array.                     |
+| 14    | The reported range is invalid                                           |
+| 255   | No update                                                               |
 
 Sensors reported to Home Assistant:
 
 ![Screenshot of sensors reported to Home Assistant](imgs/vl53l1x_sensors.png?raw=true "Home Assistant screenshot")
 
-
 ST documentation:
+
 - https://www.st.com/resource/en/user_manual/um2356-vl53l1x-api-user-manual-stmicroelectronics.pdf
 - https://www.st.com/resource/en/user_manual/um2555-vl53l1x-ultra-lite-driver-multiple-zone-implementation-stmicroelectronics.pdf

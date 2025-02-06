@@ -323,47 +323,47 @@ int8_t VL53L1XSensor::getRangeStatus() {
     RgSt = RgSt&0x1F;
     switch (RgSt)
     {
-    case 9:
-        RgSt = 0;
+    case 9: // VL53L1_DEVICEERROR_RANGECOMPLETE
+        RgSt = 0; // VL53L1_RANGESTATUS_RANGE_VALID
         break;
-    case 6:
-        RgSt = 1;
+    case 6: // VL53L1_DEVICEERROR_SIGMATHRESHOLDCHECK
+        RgSt = 1; // VL53L1_RANGESTATUS_SIGMA_FAIL
         break;
-    case 4:
-        RgSt = 2;
+    case 4: // VL53L1_DEVICEERROR_MSRCNOTARGET
+        RgSt = 2; // VL53L1_RANGESTATUS_SIGNAL_FAIL
         break;
-    case 8:
-        RgSt = 3;
+    case 8: // VL53L1_DEVICEERROR_MINCLIP
+        RgSt = 3; // VL53L1_RANGESTATUS_RANGE_VALID_MIN_RANGE_CLIPPED
         break;
-    case 5:
-        RgSt = 4;
+    case 5: // VL53L1_DEVICEERROR_RANGEPHASECHECK
+        RgSt = 4; // VL53L1_RANGESTATUS_OUTOFBOUNDS_FAIL
         break;
-    case 3:
-        RgSt = 5;
+    case 3: // VL53L1_DEVICEERROR_NOVHVVALUEFOUND
+        RgSt = 5; // VL53L1_RANGESTATUS_HARDWARE_FAIL
         break;
-    case 19:
-        RgSt = 6;
+    case 19: // VL53L1_DEVICEERROR_RANGECOMPLETE_NO_WRAP_CHECK
+        RgSt = 6; // VL53L1_RANGESTATUS_RANGE_VALID_NO_WRAP_CHECK_FAIL
         break;
-    case 7:
-        RgSt = 7;
+    case 7: // VL53L1_DEVICEERROR_PHASECONSISTENCY
+        RgSt = 7; // VL53L1_RANGESTATUS_WRAP_TARGET_FAIL
         break;
-    case 12:
-        RgSt = 9;
+    case 12: // VL53L1_DEVICEERROR_RANGEIGNORETHRESHOLD
+        RgSt = 9; // VL53L1_RANGESTATUS_XTALK_SIGNAL_FAIL
         break;
-    case 18:
-        RgSt = 10;
+    case 18: // VL53L1_DEVICEERROR_GPHSTREAMCOUNT0READY
+        RgSt = 10; // VL53L1_RANGESTATUS_SYNCRONISATION_INT
       break;
-    case 22:
-        RgSt = 11;
+    case 22: // VL53L1_DEVICEERROR_RANGECOMPLETE_MERGED_PULSE
+        RgSt = 11; // VL53L1_RANGESTATUS_RANGE_VALID_MERGED_PULSE
         break;
-    case 23:
-        RgSt = 12;
+    case 23: // VL53L1_DEVICEERROR_PREV_RANGE_NO_TARGETS
+        RgSt = 12; // VL53L1_RANGESTATUS_TARGET_PRESENT_LACK_OF_SIGNAL
         break;
-    case 13:
-        RgSt = 13;
+    case 13: // VL53L1_DEVICEERROR_USERROICLIP
+        RgSt = 13; // VL53L1_RANGESTATUS_MIN_RANGE_FAIL
         break;
     default:
-        RgSt = 255;
+        RgSt = 255; // VL53L1_RANGESTATUS_NONE
         break;
     }
     return RgSt;
