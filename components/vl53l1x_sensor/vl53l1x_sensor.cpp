@@ -242,7 +242,7 @@ void VL53L1XSensor::dump_config() {
     ESP_LOGCONFIG(TAG, "  Timeout: %u%s", this->timeout_us_, this->timeout_us_ > 0 ? "µs" : " (no timeout)");
     ESP_LOGCONFIG(TAG, "  Distance mode: %u", this->distance_mode_);
     ESP_LOGCONFIG(TAG, "  Timing budget: %uµs", this->timing_budget_us_);
-    ESP_LOGCONFIG(TAG, "  Signal threshold: %u", this->signal_threshold_);
+    ESP_LOGCONFIG(TAG, "  Signal threshold: %u KCPS", this->signal_threshold_);
     ESP_LOGCONFIG(TAG, "  ROI center SPAD: %u", this->roi_center_);
     ESP_LOGCONFIG(TAG, "  ROI size: x=%u, y=%u", this->roi_size_x_, this->roi_size_y_);
 }
