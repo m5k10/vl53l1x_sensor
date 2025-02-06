@@ -79,7 +79,7 @@ CONFIG_SCHEMA = cv.All(
         {
             cv.Optional(CONF_TIMING_BUDGET, default="100ms"): cv.positive_time_period_microseconds,
             cv.Optional(CONF_DISTANCE_MODE, default="LONG"): cv.enum({"SHORT": DistanceMode.Short, "MEDIUM": DistanceMode.Medium, "LONG": DistanceMode.Long}),
-            cv.Optional(CONF_SIGNAL_THRESHOLD, default="2"): cv.int_,
+            cv.Optional(CONF_SIGNAL_THRESHOLD, default="1024"): cv.int_,
             cv.Optional(CONF_TIMEOUT, default="10ms"): check_timeout,
             cv.Optional(CONF_ENABLE_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_IRQ_PIN): pins.gpio_input_pin_schema,

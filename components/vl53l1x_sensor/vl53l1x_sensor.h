@@ -67,10 +67,10 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     GPIOPin *enable_pin_{nullptr};
     GPIOPin *irq_pin_{nullptr};
     static bool enable_pin_setup_complete;
-    uint16_t timeout_start_us_;
-    uint16_t timeout_us_{};
+    uint32_t timeout_start_us_;
+    uint32_t timeout_us_{};
     DistanceMode distance_mode_{Long};
-    uint16_t timing_budget_us_{};
+    uint32_t timing_budget_us_{};
     uint16_t signal_threshold_{};
     uint8_t roi_center_{};
     uint8_t roi_size_x_{};
