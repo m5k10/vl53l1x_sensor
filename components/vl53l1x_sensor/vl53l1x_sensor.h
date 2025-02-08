@@ -69,6 +69,11 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_timing_budget(uint32_t us) { this->timing_budget_us_ = us; };
     void set_signal_threshold(uint16_t signal) { this->signal_threshold_ = signal; };
     void set_roi_center(uint8_t roi_center) { this->roi_center_ = roi_center; };
+    void set_roi_center(uint8_t x, uint8_t y) {
+      this->roi_center_ =
+        (143 - y + x*8) * (1 - (uint8_t)((15 - y) / 8)) +
+        (122 + y - x*8) * (uint8_t)((15 - y) / 8);
+    };
     void set_roi_size(uint8_t x, uint8_t y) { this->roi_size_x_ = x; this->roi_size_y_ = y; };
 
     void set_ambient_rate_sensor(sensor::Sensor *sensor) { this->ambient_rate_sensor = sensor; }

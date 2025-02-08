@@ -22,7 +22,8 @@ VL53L1XSensor = vl53l1x_ns.class_(
 CONF_TIMING_BUDGET = "timing_budget"
 CONF_DISTANCE_MODE = "distance_mode"
 CONF_SIGNAL_THRESHOLD = "signal_threshold"
-CONF_ROI_CENTER = "roi_center"
+CONF_ROI_CENTER_SPAD = "roi_center"
+CONF_ROI_CENTER_XY = "roi_center_xy"
 CONF_ROI_SIZE = "roi_size"
 CONF_X = "x"
 CONF_Y = "y"
@@ -39,6 +40,9 @@ def check_keys(obj):
         msg = "Address other then 0x29 requires enable_pin definition to allow sensor\r"
         msg += "re-addressing. Also if you have more then one VL53 device on the same\r"
         msg += "i2c bus, then all VL53 devices must have enable_pin defined."
+        raise cv.Invalid(msg)
+    if CONF_ROI_CENTER_SPAD in obj and CONF_ROI_CENTER_XY in obj:
+        msg = f"ROI center defined by {CONF_ROI_CENTER_XY} conflicts with {CONF_ROI_CENTER_SPAD}"
         raise cv.Invalid(msg)
     return obj
 
@@ -63,6 +67,11 @@ def check_timeout(value):
 DistanceMode = vl53l1x_ns.enum("DistanceMode")
 
 CONFIG_XY = cv.All({
+    cv.Required(CONF_X): cv.int_range(0, 15),
+    cv.Required(CONF_Y): cv.int_range(0, 15),
+})
+
+CONFIG_ROI_SIZE = cv.All({
     cv.Required(CONF_X): cv.int_range(4, 16),
     cv.Required(CONF_Y): cv.int_range(4, 16),
 })
@@ -99,8 +108,9 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
-            cv.Optional(CONF_ROI_CENTER, default=199): cv.int_range(0, 255),
-            cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_XY,
+            cv.Optional(CONF_ROI_CENTER_SPAD): cv.int_range(0, 255),
+            cv.Optional(CONF_ROI_CENTER_XY): CONFIG_XY,
+            cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_ROI_SIZE,
         }
     )
     .extend(cv.polling_component_schema("60s"))
@@ -136,8 +146,10 @@ async def to_code(config):
     if range_status_sensor_config := config.get(CONF_RANGE_STATUS_SENSOR):
         sens = await sensor.new_sensor(range_status_sensor_config)
         cg.add(var.set_range_status_sensor(sens))
-    if CONF_ROI_CENTER in config:
-        cg.add(var.set_roi_center(config[CONF_ROI_CENTER]))
+    if CONF_ROI_CENTER_SPAD in config:
+        cg.add(var.set_roi_center(config[CONF_ROI_CENTER_SPAD]))
+    if CONF_ROI_CENTER_XY in config:
+        cg.add(var.set_roi_center(config[CONF_ROI_CENTER_XY][CONF_X], config[CONF_ROI_CENTER_XY][CONF_Y]))
     if CONF_ROI_SIZE in config:
         roi_size = config[CONF_ROI_SIZE]
         cg.add(var.set_roi_size(roi_size[CONF_X], roi_size[CONF_Y]))

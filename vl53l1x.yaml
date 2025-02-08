@@ -38,6 +38,14 @@ sensor:
     roi_size:
       x: 4
       y: 4
+  - platform: vl53l1x_sensor
+    name: Basic settings
+    roi_center_xy:
+      x: 3
+      y: 8
+    roi_size:
+      x: 4
+      y: 4
 i2c:
   sda: 4
   scl: 5
