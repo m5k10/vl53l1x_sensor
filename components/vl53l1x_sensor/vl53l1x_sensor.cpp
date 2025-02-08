@@ -546,7 +546,7 @@ void VL53L1XSensor::set_roi() {
 uint8_t VL53L1XSensor::calc_spad_index(uint8_t x, uint8_t y) {
   return
     (143 - y + x*8) * (1 - (uint8_t)((15 - y) / 8)) +
-    (122 + y - x*8) * (uint8_t)((15 - y) / 8);
+    (120 + y - x*8) * (uint8_t)((15 - y) / 8);
 }
 
 } //namespace vl53l1x
