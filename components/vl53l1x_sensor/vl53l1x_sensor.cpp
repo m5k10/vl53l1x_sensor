@@ -243,28 +243,7 @@ void VL53L1XSensor::dump_config() {
     ESP_LOGCONFIG(TAG, "  Distance mode: %u", this->distance_mode_);
     ESP_LOGCONFIG(TAG, "  Timing budget: %uµs", this->timing_budget_us_);
     ESP_LOGCONFIG(TAG, "  Signal threshold: %u KCPS", this->signal_threshold_);
-    ESP_LOGCONFIG(TAG, "  ROI center SPAD: %u", this->roi_center_);
-    ESP_LOGCONFIG(TAG, "  SPAD table:");
-    for(int8_t y = 15; y>0; y--) {
-      ESP_LOGCONFIG(TAG, "  %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-        calc_spad_index(0, y),
-        calc_spad_index(1, y),
-        calc_spad_index(2, y),
-        calc_spad_index(3, y),
-        calc_spad_index(4, y),
-        calc_spad_index(5, y),
-        calc_spad_index(6, y),
-        calc_spad_index(7, y),
-        calc_spad_index(8, y),
-        calc_spad_index(9, y),
-        calc_spad_index(10, y),
-        calc_spad_index(11, y),
-        calc_spad_index(12, y),
-        calc_spad_index(13, y),
-        calc_spad_index(14, y),
-        calc_spad_index(15, y)
-      );
-    }
+    ESP_LOGCONFIG(TAG, "  ROI center: %u", this->roi_center_);
     ESP_LOGCONFIG(TAG, "  ROI size: x=%u, y=%u", this->roi_size_x_, this->roi_size_y_);
 }
 

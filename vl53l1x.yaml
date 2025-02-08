@@ -40,7 +40,7 @@ sensor:
       y: 4
   - platform: vl53l1x_sensor
     name: Basic settings
-    roi_center_xy:
+    roi_center:
       x: 3
       y: 8
     roi_size:
