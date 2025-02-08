@@ -244,6 +244,27 @@ void VL53L1XSensor::dump_config() {
     ESP_LOGCONFIG(TAG, "  Timing budget: %uµs", this->timing_budget_us_);
     ESP_LOGCONFIG(TAG, "  Signal threshold: %u KCPS", this->signal_threshold_);
     ESP_LOGCONFIG(TAG, "  ROI center SPAD: %u", this->roi_center_);
+    ESP_LOGCONFIG(TAG, "  SPAD table:");
+    for(int8_t y = 15; y>0; y--) {
+      ESP_LOGCONFIG(TAG, "  %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+        calc_spad_index(0, y),
+        calc_spad_index(1, y),
+        calc_spad_index(2, y),
+        calc_spad_index(3, y),
+        calc_spad_index(4, y),
+        calc_spad_index(5, y),
+        calc_spad_index(6, y),
+        calc_spad_index(7, y),
+        calc_spad_index(8, y),
+        calc_spad_index(9, y),
+        calc_spad_index(10, y),
+        calc_spad_index(11, y),
+        calc_spad_index(12, y),
+        calc_spad_index(13, y),
+        calc_spad_index(14, y),
+        calc_spad_index(15, y)
+      );
+    }
     ESP_LOGCONFIG(TAG, "  ROI size: x=%u, y=%u", this->roi_size_x_, this->roi_size_y_);
 }
 
@@ -522,6 +543,11 @@ void VL53L1XSensor::set_roi() {
     reg16(0x0080) = roi_size;
 }
 
+uint8_t VL53L1XSensor::calc_spad_index(uint8_t x, uint8_t y) {
+  return
+    (143 - y + x*8) * (1 - (uint8_t)((15 - y) / 8)) +
+    (122 + y - x*8) * (uint8_t)((15 - y) / 8);
+}
 
 } //namespace vl53l1x
 } //namespace esphome

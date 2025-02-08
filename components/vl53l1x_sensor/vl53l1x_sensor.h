@@ -70,9 +70,7 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     void set_signal_threshold(uint16_t signal) { this->signal_threshold_ = signal; };
     void set_roi_center(uint8_t roi_center) { this->roi_center_ = roi_center; };
     void set_roi_center(uint8_t x, uint8_t y) {
-      this->roi_center_ =
-        (143 - y + x*8) * (1 - (uint8_t)((15 - y) / 8)) +
-        (122 + y - x*8) * (uint8_t)((15 - y) / 8);
+      this->roi_center_ = calc_spad_index(x, y);
     };
     void set_roi_size(uint8_t x, uint8_t y) { this->roi_size_x_ = x; this->roi_size_y_ = y; };
 
@@ -94,6 +92,7 @@ class VL53L1XSensor : public sensor::Sensor, public PollingComponent, public i2c
     uint16_t encode_timeout(uint32_t timeout_mclks);
     uint32_t timeout_microseconds_to_mclks(uint32_t timeout_us, uint32_t macro_period_us);
     void writeWord(uint16_t reg_idx, uint16_t data);
+    uint8_t calc_spad_index(uint8_t x, uint8_t y);
 
     int8_t getRangeStatus();
     int16_t distance();
