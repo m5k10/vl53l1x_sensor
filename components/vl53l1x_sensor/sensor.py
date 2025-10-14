@@ -45,19 +45,20 @@ def check_keys(obj):
 
 
 def check_roi_center(name, obj):
-    print(f"Validate {name} {obj}")
     size = obj[CONF_ROI_SIZE][name]
     if CONF_ROI_CENTER in obj:
         center_any = obj[CONF_ROI_CENTER]
         if isinstance(center_any, int):
             xy = calc_spad_xy(center_any)
             center = xy[name]
+            path = [CONF_ROI_CENTER]
             validated_obj = f"ROI center {center_any}(x={xy[CONF_X]},y={xy[CONF_Y]}): {name}"
         else:
             center = center_any[name]
+            path = [CONF_ROI_CENTER, name]
             validated_obj = f"Component {name} of ROI center"
         if center - int(size/2) < 0 or center + int((size+1)/2) - 1 > 15:
-            raise cv.Invalid(f"{validated_obj} needs to be in range [{int(size/2)}, {16-int((size+1)/2)}]")
+            raise cv.Invalid(f"{validated_obj} needs to be in range [{int(size/2)}, {16-int((size+1)/2)}]", path=path)
     return obj
         
 def calc_spad_xy(spad_index: int) -> dict[str, int]:
