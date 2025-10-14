@@ -44,13 +44,13 @@ def check_keys(obj):
     return obj
 
 
-def __check_roi_center(name, obj):
+def check_roi_center(name, obj):
     print(f"Validate {name} {obj}")
     size = obj[CONF_ROI_SIZE][name]
     if CONF_ROI_CENTER in obj:
         center_any = obj[CONF_ROI_CENTER]
         if isinstance(center_any, int):
-            xy = __calc_spad_xy(center_any)
+            xy = calc_spad_xy(center_any)
             center = xy[name]
             validated_obj = f"ROI center {center_any}(x={xy[CONF_X]},y={xy[CONF_Y]}): {name}"
         else:
@@ -60,7 +60,7 @@ def __check_roi_center(name, obj):
             raise cv.Invalid(f"{validated_obj} needs to be in range [{int(size/2)}, {16-int((size+1)/2)}]")
     return obj
         
-def __calc_spad_xy(spad_index: int) -> dict[str, int]:
+def calc_spad_xy(spad_index: int) -> dict[str, int]:
     if spad_index <= 127:
         x = 15 - spad_index // 8
         y = spad_index % 8
@@ -70,10 +70,10 @@ def __calc_spad_xy(spad_index: int) -> dict[str, int]:
     return {"x": x, "y": y}
 
 def check_roi_center_x(obj):
-    return __check_roi_center(CONF_X, obj)
+    return check_roi_center(CONF_X, obj)
     
 def check_roi_center_y(obj):
-    return __check_roi_center(CONF_Y, obj)
+    return check_roi_center(CONF_Y, obj)
 
 def check_timing_budget(obj):
     timing_budget = cv.positive_time_period_milliseconds(obj[CONF_TIMING_BUDGET])
