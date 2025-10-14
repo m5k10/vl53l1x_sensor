@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
       - name: Test with pytest
-        run: python -m pytest
+        run: poetry run python -m pytest
   compile:
     runs-on: ubuntu-latest
     defaults:
