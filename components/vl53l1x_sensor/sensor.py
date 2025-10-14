@@ -44,6 +44,37 @@ def check_keys(obj):
     return obj
 
 
+def __check_roi_center(name, obj):
+    print(f"Validate {name} {obj}")
+    size = obj[CONF_ROI_SIZE][name]
+    if CONF_ROI_CENTER in obj:
+        center_any = obj[CONF_ROI_CENTER]
+        if isinstance(center_any, int):
+            xy = __calc_spad_xy(center_any)
+            center = xy[name]
+            validated_obj = f"ROI center {center_any}(x={xy[CONF_X]},y={xy[CONF_Y]}): {name}"
+        else:
+            center = center_any[name]
+            validated_obj = f"Component {name} of ROI center"
+        if center - int(size/2) < 0 or center + int((size+1)/2) - 1 > 15:
+            raise cv.Invalid(f"{validated_obj} needs to be in range [{int(size/2)}, {16-int((size+1)/2)}]")
+    return obj
+        
+def __calc_spad_xy(spad_index: int) -> dict[str, int]:
+    if spad_index <= 127:
+        x = 15 - spad_index // 8
+        y = spad_index % 8
+    else:
+        x = (spad_index-128) // 8
+        y = 15 - (spad_index-128) % 8
+    return {"x": x, "y": y}
+
+def check_roi_center_x(obj):
+    return __check_roi_center(CONF_X, obj)
+    
+def check_roi_center_y(obj):
+    return __check_roi_center(CONF_Y, obj)
+
 def check_timing_budget(obj):
     timing_budget = cv.positive_time_period_milliseconds(obj[CONF_TIMING_BUDGET])
     distance_mode = obj[CONF_DISTANCE_MODE]
@@ -63,9 +94,9 @@ def check_timeout(value):
 
 DistanceMode = vl53l1x_ns.enum("DistanceMode")
 
-CONFIG_XY = cv.All({
-    cv.Required(CONF_X): cv.int_range(0, 15),
-    cv.Required(CONF_Y): cv.int_range(0, 15),
+CONFIG_ROI_CENTER = cv.All({
+    cv.Required(CONF_X): cv.int_range(2, 14),
+    cv.Required(CONF_Y): cv.int_range(2, 14),
 })
 
 CONFIG_ROI_SIZE = cv.All({
@@ -105,14 +136,15 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
-            cv.Optional(CONF_ROI_CENTER): Any(cv.int_range(0, 255), CONFIG_XY),
+            cv.Optional(CONF_ROI_CENTER): Any(cv.int_range(0, 255), CONFIG_ROI_CENTER),
             cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_ROI_SIZE,
         }
     )
     .extend(cv.polling_component_schema("60s"))
     .extend(i2c.i2c_device_schema(0x29)),
     check_keys,
-    check_timing_budget
+    check_timing_budget,
+    check_roi_center_x, check_roi_center_y
 )
 
 
