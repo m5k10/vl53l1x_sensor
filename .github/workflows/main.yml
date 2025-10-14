@@ -24,6 +24,17 @@ jobs:
         uses: abatilo/actions-poetry@v3
         with:
           poetry-version: "2.2.1"
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
       - name: Test with pytest
         run: poetry run pytest
   compile:
