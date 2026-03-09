@@ -1,7 +1,7 @@
 import pytest
 from contextlib import nullcontext
 import esphome.config_validation as cv
-from .sensor import calc_spad_xy, check_roi_center
+from .sensor import calc_spad_xy, check_roi_center, CONFIG_SCHEMA
 
 @pytest.mark.parametrize(
     "x, y, index",
@@ -42,3 +42,8 @@ def test_check_roi_center(x, y):
         assert check_roi_center("x", obj) == obj
     with y_exp as e:
         assert check_roi_center("y", obj) == obj
+
+def test_check_default_roi():        
+    conf = CONFIG_SCHEMA({"id": "test", "name": "Distance sensor"})
+    assert conf.get("roi_center") is 199
+    assert conf.get("roi_size") == {"x": 16, "y": 16}
