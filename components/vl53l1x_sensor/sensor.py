@@ -137,7 +137,7 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
-            cv.Optional(CONF_ROI_CENTER): Any(cv.int_range(0, 255), CONFIG_ROI_CENTER),
+            cv.Optional(CONF_ROI_CENTER, default=199): Any(cv.int_range(0, 255), CONFIG_ROI_CENTER),
             cv.Optional(CONF_ROI_SIZE, default={"x":16, "y": 16}): CONFIG_ROI_SIZE,
         }
     )
