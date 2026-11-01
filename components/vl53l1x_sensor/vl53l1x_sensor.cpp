@@ -224,6 +224,7 @@ void VL53L1XSensor::update() {
       ESP_LOGD(TAG, "'%s' - Got distance %i mm", this->name_.c_str(), distance_mm);
       this->publish_state(distance_m);
     }
+    clearInterrupt();
   } else {
     ESP_LOGD(TAG, "'%s' - data not ready", this->name_.c_str());
   }
